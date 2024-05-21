@@ -2,11 +2,19 @@
 
 # import the modules you need here
 import argparse
+import numpy as np
+import pandas as pd
+import datetime
 
 def read_tidal_data(filename):
-
-    return 0
+        
+    data = pd.read_table(filename, skiprows= 11, names = [ 'Cycle', 'Date', 'Time', 'Sea Level', 'Residual' ], sep="\s+")
+    data.index = pd.to_datetime(data['Date'] + ' ' + data['Time'])
     
+    
+    return data
+    
+
 def extract_single_year_remove_mean(year, data):
    
 
@@ -20,6 +28,8 @@ def extract_section_remove_mean(start, end, data):
 
 
 def join_data(data1, data2):
+    
+    
 
     return 
 
@@ -40,7 +50,7 @@ def get_longest_contiguous_data(data):
 
     return 
 
-if __name__ == '__main__':
+#if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(
                      prog="UK Tidal analysis",
