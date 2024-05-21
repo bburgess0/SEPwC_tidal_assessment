@@ -8,9 +8,11 @@ import datetime
 
 def read_tidal_data(filename):
         
-    data = pd.read_table(filename, skiprows= 11, names = [ 'Cycle', 'Date', 'Time', 'Sea Level', 'Residual' ], sep="\s+")
+    data = pd.read_table(filename, skiprows= 11, names = [ 'Cycle', 'Date', 'Time', 'Sea Level', 'Residual' ], sep=r"\s+")
     data.index = pd.to_datetime(data['Date'] + ' ' + data['Time'])
     
+    data.replace(to_replace=".*(N|M|T)$",value={'Sea Level':np.nan},regex=True,inplace=True)
+    data['Sea Level'] = data['Sea Level'].astype(float)
     
     return data
     
@@ -50,7 +52,7 @@ def get_longest_contiguous_data(data):
 
     return 
 
-#if __name__ == '__main__':
+if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(
                      prog="UK Tidal analysis",
