@@ -4,7 +4,7 @@
 import argparse
 import numpy as np
 import pandas as pd
-import datetime
+from datetime import datetime
 
 def read_tidal_data(filename):
         
@@ -29,9 +29,12 @@ def extract_single_year_remove_mean(year, data):
 
 def extract_section_remove_mean(start, end, data):
     
+    data = data.loc[start : end, ['Sea Level']] 
+    mean_sea_level = data['Sea Level'].mean()
     
+    data = mean_sea_level - data
 
-    return 
+    return data
 
 
 def join_data(data1, data2):
