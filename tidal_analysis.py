@@ -19,26 +19,29 @@ def read_tidal_data(filename):
 
 def extract_single_year_remove_mean(year, data):
     
-
+    data = data[data.index.year == int(year)]
+    mean_sea_level = data['Sea Level'].mean()
+    
+    data.loc[:,'Sea Level'] = mean_sea_level - data.loc[:,'Sea Level']
+    
     return data
 
 
 def extract_section_remove_mean(start, end, data):
-
+    
+    
 
     return 
 
 
 def join_data(data1, data2):
     
-    top = data2
-    bottom = data1 
-    data = pd.merge(top, bottom, on=['Cycle', 'Date', 'Time', 'Sea Level', 'Residual'], how = 'outer')
+    left = data2
+    right = data1 
+    data = pd.merge(left, right, on=['Cycle', 'Date', 'Time', 'Sea Level', 'Residual'], how = 'outer')
     data.index = pd.to_datetime(data['Date'] + ' ' + data['Time'])
     
-    
     return data
-
 
 
 def sea_level_rise(data):
