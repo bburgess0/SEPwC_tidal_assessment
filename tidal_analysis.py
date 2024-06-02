@@ -4,7 +4,10 @@
 import argparse
 import numpy as np
 import pandas as pd
-from datetime import datetime
+import datetime
+import pytz
+import uptide
+
 
 def read_tidal_data(filename):
         
@@ -32,9 +35,9 @@ def extract_section_remove_mean(start, end, data):
     data = data.loc[start : end, ['Sea Level']] 
     mean_sea_level = data['Sea Level'].mean()
     
-    data = mean_sea_level - data
+    data_segment = mean_sea_level - data
 
-    return data
+    return data_segment
 
 
 def join_data(data1, data2):
@@ -44,18 +47,24 @@ def join_data(data1, data2):
     data = pd.merge(left, right, on=['Cycle', 'Date', 'Time', 'Sea Level', 'Residual'], how = 'outer')
     data.index = pd.to_datetime(data['Date'] + ' ' + data['Time'])
     
-    return data
+    return data 
 
 
 def sea_level_rise(data):
-
-                                                     
-    return 
+    
+    
+                                 
+    return data
 
 def tidal_analysis(data, constituents, start_datetime):
-
-
-    return 
+ 
+    tide = uptide.Tides(constituents)
+    tide.set_initial_time(start_datetime)
+    data = data.dropna(subset=['Sea Level'])
+    seconds_since = (data.index.astype('int64').to_numpy()/1e9) - (start_datetime).timestamp()
+    amp, pha = uptide.harmonic_analysis(tide, data['Sea Level'].to_numpy(), seconds_since) 
+    
+    return amp, pha
 
 def get_longest_contiguous_data(data):
 
